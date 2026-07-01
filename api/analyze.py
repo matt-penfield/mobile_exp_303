@@ -1,57 +1,25 @@
 import os
 import re
 import json
-import tempfile
-
-from fastapi import FastAPI, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from http.server import BaseHTTPRequestHandler
 import yt_dlp
 from groq import Groq
 
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 YOUTUBE_URL_PATTERN = re.compile(
     r"^(https?://)?(www\.)?(youtube\.com/watch\?v=|youtu\.be/|youtube\.com/shorts/)[\w\-]+"
 )
 
 
-class AnalyzeRequest(BaseModel):
-    youtube_url: str
-
-
-class AnalysisResponse(BaseModel):
-    title: str
-    artist: str
-    key: str
-    key_detail: str
-    tempo: str
-    tempo_detail: str
-    arrangement: str
-    instruments: list[str]
-    mood_text: str
-    moods: list[dict]
-    tips: list[dict]
-
-
 def _get_groq_client():
     api_key = os.environ.get("GROQ_API_KEY")
     if not api_key:
-        raise HTTPException(status_code=500, detail="GROQ_API_KEY not configured")
+        raise RuntimeError("GROQ_API_KEY not configured")
     return Groq(api_key=api_key)
 
 
 def extract_metadata(youtube_url: str) -> dict:
     """Extract title and artist from YouTube without downloading audio."""
-    # Strip playlist parameters
     youtube_url = re.split(r"[&?]list=", youtube_url)[0]
 
     ydl_opts = {
@@ -67,7 +35,6 @@ def extract_metadata(youtube_url: str) -> dict:
     title = info.get("title", "Unknown Title")
     artist = info.get("artist") or info.get("uploader") or "Unknown Artist"
 
-    # Clean up " - Topic" suffix from auto-generated channels
     if artist.endswith(" - Topic"):
         artist = artist[: -len(" - Topic")]
 
@@ -138,40 +105,68 @@ Provide a complete analysis covering key, tempo, arrangement, instrumentation, m
     return result
 
 
-@app.post("/api/analyze")
-def analyze_song(request: AnalyzeRequest):
-    url = request.youtube_url.strip()
+class handler(BaseHTTPRequestHandler):
 
-    if not YOUTUBE_URL_PATTERN.match(url):
-        raise HTTPException(status_code=400, detail="Invalid YouTube URL")
+    def do_POST(self):
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(content_length)
+            data = json.loads(body)
 
-    # Step 1: Extract metadata from YouTube (no download needed)
-    try:
-        metadata = extract_metadata(url)
-    except Exception as e:
-        raise HTTPException(status_code=422, detail=f"YouTube extraction failed: {type(e).__name__}: {str(e)}")
+            url = data.get("youtube_url", "").strip()
 
-    # Step 2: Generate full analysis via LLM
-    try:
-        result = generate_analysis(
-            title=metadata["title"],
-            artist=metadata["artist"],
-        )
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"LLM analysis failed: {type(e).__name__}: {str(e)}")
+            if not YOUTUBE_URL_PATTERN.match(url):
+                self._send_error(400, "Invalid YouTube URL")
+                return
 
-    return AnalysisResponse(
-        title=f"{metadata['title']} — {metadata['artist']}",
-        artist=metadata["artist"],
-        key=result["key"],
-        key_detail=result["key_detail"],
-        tempo=result["tempo"],
-        tempo_detail=result["tempo_detail"],
-        arrangement=result["arrangement"],
-        instruments=result["instruments"],
-        mood_text=result["mood_text"],
-        moods=result["moods"],
-        tips=result["tips"],
-    )
+            # Step 1: Extract metadata
+            try:
+                metadata = extract_metadata(url)
+            except Exception as e:
+                self._send_error(422, f"YouTube extraction failed: {type(e).__name__}: {str(e)}")
+                return
+
+            # Step 2: Generate analysis via LLM
+            try:
+                result = generate_analysis(metadata["title"], metadata["artist"])
+            except Exception as e:
+                self._send_error(500, f"LLM analysis failed: {type(e).__name__}: {str(e)}")
+                return
+
+            # Build response
+            response = {
+                "title": f"{metadata['title']} — {metadata['artist']}",
+                "artist": metadata["artist"],
+                "key": result["key"],
+                "key_detail": result["key_detail"],
+                "tempo": result["tempo"],
+                "tempo_detail": result["tempo_detail"],
+                "arrangement": result["arrangement"],
+                "instruments": result["instruments"],
+                "mood_text": result["mood_text"],
+                "moods": result["moods"],
+                "tips": result["tips"],
+            }
+
+            self._send_json(200, response)
+
+        except Exception as e:
+            self._send_error(500, f"Unexpected error: {type(e).__name__}: {str(e)}")
+
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
+    def _send_json(self, status, data):
+        body = json.dumps(data).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _send_error(self, status, message):
+        self._send_json(status, {"detail": message})
