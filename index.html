@@ -1238,7 +1238,7 @@
       }
 
       // Basic URL validation
-      if (!/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)/.test(url)) {
+      if (!/^(https?:\/\/)?(www\.|m\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)/.test(url)) {
         showError('Please enter a valid YouTube URL');
         return;
       }
