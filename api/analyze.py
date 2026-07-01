@@ -2,7 +2,8 @@ import os
 import re
 import json
 from http.server import BaseHTTPRequestHandler
-import yt_dlp
+from urllib.request import urlopen, Request
+from urllib.parse import quote
 from groq import Groq
 
 
@@ -19,26 +20,30 @@ def _get_groq_client():
 
 
 def extract_metadata(youtube_url: str) -> dict:
-    """Extract title and artist from YouTube without downloading audio."""
+    """Extract title and artist from YouTube using the oEmbed API."""
     youtube_url = re.split(r"[&?]list=", youtube_url)[0]
 
-    ydl_opts = {
-        "quiet": True,
-        "no_warnings": True,
-        "noplaylist": True,
-        "skip_download": True,
-    }
+    oembed_url = f"https://www.youtube.com/oembed?url={quote(youtube_url, safe='')}&format=json"
+    req = Request(oembed_url, headers={"User-Agent": "Mozilla/5.0"})
+    resp = urlopen(req, timeout=10)
+    data = json.loads(resp.read().decode())
 
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(youtube_url, download=False)
+    full_title = data.get("title", "Unknown Title")
+    author = data.get("author_name", "Unknown Artist")
 
-    title = info.get("title", "Unknown Title")
-    artist = info.get("artist") or info.get("uploader") or "Unknown Artist"
+    # Many music videos use "Artist - Song" format in the title
+    # Try to split; if not, use the channel name as artist
+    if " - " in full_title:
+        artist, title = full_title.split(" - ", 1)
+    else:
+        title = full_title
+        artist = author
 
+    # Clean up " - Topic" suffix
     if artist.endswith(" - Topic"):
         artist = artist[: -len(" - Topic")]
 
-    return {"title": title, "artist": artist}
+    return {"title": title.strip(), "artist": artist.strip()}
 
 
 SYSTEM_PROMPT = """You are a professional music analyst and songwriting coach. Given a song's title and artist, provide a detailed musical analysis including key, tempo, arrangement, instrumentation, mood, and actionable songwriting tips.
