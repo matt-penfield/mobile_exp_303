@@ -58,25 +58,32 @@ class AnalysisResponse(BaseModel):
 @app.post("/analyze", response_model=AnalysisResponse)
 def analyze_song(request: AnalyzeRequest):
     url = request.youtube_url.strip()
+    print(f"[ANALYZE] Received request for: {url}")
 
     if not YOUTUBE_URL_PATTERN.match(url):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
     # Step 1: Extract audio and metadata from YouTube
+    print("[ANALYZE] Step 1: Extracting audio...")
     try:
         audio_path, metadata = extract_audio_and_metadata(url)
     except Exception as e:
+        print(f"[ANALYZE] Step 1 FAILED: {e}")
         raise HTTPException(status_code=422, detail=f"Failed to extract audio: {str(e)}")
+    print(f"[ANALYZE] Step 1 done: {metadata['title']} by {metadata['artist']}")
 
     # Step 2: Analyze key and tempo with librosa
+    print("[ANALYZE] Step 2: Analyzing audio...")
     try:
         audio_features = analyze_audio(audio_path)
     except Exception as e:
+        print(f"[ANALYZE] Step 2 FAILED: {e}")
         raise HTTPException(status_code=500, detail=f"Audio analysis failed: {str(e)}")
     finally:
         # Clean up temp audio file
         if os.path.exists(audio_path):
             os.remove(audio_path)
+    print(f"[ANALYZE] Step 2 done: {audio_features}")
 
     # Step 3: Generate full analysis and tips via LLM
     try:
