@@ -56,7 +56,7 @@ class AnalysisResponse(BaseModel):
 
 
 @app.post("/analyze", response_model=AnalysisResponse)
-async def analyze_song(request: AnalyzeRequest):
+def analyze_song(request: AnalyzeRequest):
     url = request.youtube_url.strip()
 
     if not YOUTUBE_URL_PATTERN.match(url):
