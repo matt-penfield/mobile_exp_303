@@ -1095,9 +1095,10 @@
         document.getElementById('youtube-url').value = '';
 
       } catch (error) {
+        console.error('[SongCraft] Analysis error:', error);
         resetLoadingSteps();
         showScreen('home');
-        showError(error.message);
+        showError(error.message || 'Unknown error - check console');
       }
     }
 
