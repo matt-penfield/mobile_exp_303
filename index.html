@@ -641,48 +641,9 @@
 
       <div class="recent-section">
         <div class="section-title">Recent Analyses</div>
-
-        <div class="song-card" onclick="showResults('dreams')">
-          <div class="song-card-thumb">
-            <span class="material-symbols-outlined">music_note</span>
-          </div>
-          <div class="song-card-info">
-            <h4>Dreams — Fleetwood Mac</h4>
-            <p>Analyzed 2 days ago</p>
-            <div class="song-card-meta">
-              <span class="meta-chip">F major</span>
-              <span class="meta-chip">120 BPM</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="song-card" onclick="showResults('blinding')">
-          <div class="song-card-thumb">
-            <span class="material-symbols-outlined">music_note</span>
-          </div>
-          <div class="song-card-info">
-            <h4>Blinding Lights — The Weeknd</h4>
-            <p>Analyzed 5 days ago</p>
-            <div class="song-card-meta">
-              <span class="meta-chip">F minor</span>
-              <span class="meta-chip">171 BPM</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="song-card" onclick="showResults('creep')">
-          <div class="song-card-thumb">
-            <span class="material-symbols-outlined">music_note</span>
-          </div>
-          <div class="song-card-info">
-            <h4>Creep — Radiohead</h4>
-            <p>Analyzed 1 week ago</p>
-            <div class="song-card-meta">
-              <span class="meta-chip">G major</span>
-              <span class="meta-chip">92 BPM</span>
-            </div>
-          </div>
-        </div>
+        <p style="color: var(--on-surface-muted); font-size: 14px; text-align: center; padding: 24px 0;">
+          No songs analyzed yet. Paste a YouTube link above to get started.
+        </p>
       </div>
     </div>
 
@@ -871,61 +832,7 @@
         </div>
 
         <div class="library-content">
-          <div class="section-title">Your Library</div>
-
-          <div class="library-stats">
-            <div class="stat-card">
-              <div class="stat-value">3</div>
-              <div class="stat-label">Songs Analyzed</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-value">12</div>
-              <div class="stat-label">Tips Generated</div>
-            </div>
-          </div>
-
-          <div class="section-title" style="margin-top: 8px;">Style Profile</div>
-          <div class="analysis-card" style="margin-bottom: 16px;">
-            <div class="analysis-card-detail">Based on your 3 analyzed songs:</div>
-            <div class="mood-tags" style="margin-top: 12px;">
-              <span class="mood-tag purple">Major Keys</span>
-              <span class="mood-tag teal">100–130 BPM</span>
-              <span class="mood-tag gold">Guitar-Driven</span>
-              <span class="mood-tag warm">Emotional</span>
-            </div>
-          </div>
-
-          <div class="section-title">All Analyses</div>
-
-          <div class="song-card" onclick="showResults('dreams')">
-            <div class="song-card-thumb">
-              <span class="material-symbols-outlined">music_note</span>
-            </div>
-            <div class="song-card-info">
-              <h4>Dreams — Fleetwood Mac</h4>
-              <p>F major · 120 BPM</p>
-            </div>
-          </div>
-
-          <div class="song-card" onclick="showResults('blinding')">
-            <div class="song-card-thumb">
-              <span class="material-symbols-outlined">music_note</span>
-            </div>
-            <div class="song-card-info">
-              <h4>Blinding Lights — The Weeknd</h4>
-              <p>F minor · 171 BPM</p>
-            </div>
-          </div>
-
-          <div class="song-card" onclick="showResults('creep')">
-            <div class="song-card-thumb">
-              <span class="material-symbols-outlined">music_note</span>
-            </div>
-            <div class="song-card-info">
-              <h4>Creep — Radiohead</h4>
-              <p>G major · 92 BPM</p>
-            </div>
-          </div>
+          <!-- Dynamically rendered by renderLibrary() -->
         </div>
       </div>
     </div>
@@ -948,122 +855,205 @@
   </div>
 
   <script>
-    // Song data for demo
-    const songData = {
-      dreams: {
-        title: 'Dreams — Fleetwood Mac',
-        meta: '1977 · Rumours',
-        key: 'F Major',
-        keyDetail: 'No key changes detected. Uses Mixolydian mode (♭7) giving a floaty, unresolved feel.',
-        tempo: '120 BPM',
-        tempoDetail: 'Straight feel, steady tempo throughout. Moderate groove — not rushed, not dragging.',
-        arrangement: 'Intro (8 bars) → Verse 1 → Chorus → Verse 2 → Chorus → Instrumental Break → Verse 3 → Chorus → Outro (fade)',
-        instruments: ['🎸 Electric Guitar', '🥁 Drums', '🎹 Keyboards', '🎤 Vocals', '🎵 Bass', '🎶 Backing Vocals'],
-        moodText: 'Dreamy and bittersweet with a steady, hypnotic energy. Emotionally reflective but never heavy.',
-        moods: [{text: 'Dreamy', class: 'purple'}, {text: 'Bittersweet', class: 'warm'}, {text: 'Hypnotic', class: 'teal'}, {text: 'Mid Energy', class: 'gold'}],
-        tips: [
-          { label: 'Try This', class: '', text: 'Write in F major at ~120 BPM using only two chords (F and G). The power of this song is its simplicity — the hypnotic loop creates space for melody and lyrics to shine.' },
-          { label: 'Arrangement Tip', class: 'warm', text: 'Keep your arrangement nearly identical across verses and choruses. Differentiate sections through vocal melody and lyric intensity rather than instrumental changes.' },
-          { label: 'Instrumentation Tip', class: 'teal', text: 'Layer a fingerpicked electric guitar pattern over a steady kick-snare groove. Add keyboards for warmth but keep them low in the mix — texture, not melody.' },
-          { label: 'Mood Tip', class: 'gold', text: 'To capture the dreamy, floating quality: use Mixolydian mode (major scale with ♭7), keep the tempo moderate, and let vocals carry reverb with a slight delay.' }
-        ]
-      },
-      blinding: {
-        title: 'Blinding Lights — The Weeknd',
-        meta: '2020 · After Hours',
-        key: 'F Minor',
-        keyDetail: 'Stays in F minor throughout. Uses i–VI–VII–iv progression for that nostalgic 80s synth-pop feel.',
-        tempo: '171 BPM',
-        tempoDetail: 'Fast driving tempo with a straight 4-on-the-floor beat. High energy throughout — relentless forward motion.',
-        arrangement: 'Intro (synth riff) → Verse 1 → Pre-Chorus → Chorus → Verse 2 → Pre-Chorus → Chorus → Bridge → Final Chorus → Outro',
-        instruments: ['🎹 Synth Lead', '🥁 Drum Machine', '🎵 Synth Bass', '🎤 Vocals', '🎸 Guitar (subtle)', '🎶 Synth Pads'],
-        moodText: 'Euphoric and urgent with nostalgic undertones. High energy that never lets up — drives forward relentlessly.',
-        moods: [{text: 'Euphoric', class: 'warm'}, {text: 'Nostalgic', class: 'purple'}, {text: 'Urgent', class: 'gold'}, {text: 'High Energy', class: 'teal'}],
-        tips: [
-          { label: 'Try This', class: '', text: 'Write in F minor at a fast tempo (~170 BPM). Use a bright, arpeggiated synth riff as your hook — make it instantly memorable and loop it throughout.' },
-          { label: 'Arrangement Tip', class: 'warm', text: 'Use a pre-chorus to build tension before each chorus. Keep the energy high by never fully dropping out — even the bridge should maintain rhythmic momentum.' },
-          { label: 'Instrumentation Tip', class: 'teal', text: 'Layer analog-style synths: a bright lead, warm pads, and a punchy synth bass. Add a 4-on-the-floor kick with crisp snare on 2 and 4 for that retro drive.' },
-          { label: 'Mood Tip', class: 'gold', text: 'For nostalgic euphoria: combine minor key melancholy with major-lift moments in the chorus. Use gated reverb and chorus effects on synths for that 80s sheen.' }
-        ]
-      },
-      creep: {
-        title: 'Creep — Radiohead',
-        meta: '1993 · Pablo Honey',
-        key: 'G Major',
-        keyDetail: 'G major with chromatic moves to B major and C minor. The unexpected B chord creates the signature tension.',
-        tempo: '92 BPM',
-        tempoDetail: 'Slow, deliberate tempo. Straight feel with a heavy, plodding quality in the verse that explodes in the chorus.',
-        arrangement: 'Intro (clean guitar) → Verse 1 → Chorus → Verse 2 → Chorus → Bridge (quiet) → Chorus (full) → Outro',
-        instruments: ['🎸 Electric Guitar (clean)', '🎸 Electric Guitar (distorted)', '🥁 Drums', '🎵 Bass', '🎤 Vocals', '🎹 Strings (subtle)'],
-        moodText: 'Vulnerable and self-loathing in the verse, erupting into cathartic release in the chorus. Extreme dynamic contrast.',
-        moods: [{text: 'Vulnerable', class: 'teal'}, {text: 'Cathartic', class: 'warm'}, {text: 'Angsty', class: 'purple'}, {text: 'Dynamic', class: 'gold'}],
-        tips: [
-          { label: 'Try This', class: '', text: 'Write in G major at ~90 BPM. Use a I–III–IV–iv chord progression — that chromatic III chord (B major in G) creates instant emotional tension without leaving the key center.' },
-          { label: 'Arrangement Tip', class: 'warm', text: 'Build extreme dynamic contrast: keep verses whisper-quiet with clean guitar and soft vocals, then explode into distorted, full-band choruses. The contrast IS the hook.' },
-          { label: 'Instrumentation Tip', class: 'teal', text: 'Use two guitar tones — clean arpeggios for verses and heavily distorted power chords for choruses. The "crunch" sound before choruses (guitar noise bursts) signals the shift.' },
-          { label: 'Mood Tip', class: 'gold', text: 'For vulnerable-to-cathartic: sing softly and low in verses (almost speaking), then leap to a higher register with full voice in choruses. Let the lyrics match — intimate confession vs. emotional outburst.' }
-        ]
-      }
-    };
+    const API_BASE = window.location.origin;
+    const STORAGE_KEY = 'songcraft_analyses';
 
-    function showScreen(name) {
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('screen-' + name).classList.add('active');
-
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      if (name === 'home') document.getElementById('nav-home').classList.add('active');
-      if (name === 'library') document.getElementById('nav-library').classList.add('active');
+    // --- localStorage helpers ---
+    function getSavedAnalyses() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch { return []; }
     }
 
-    function showResults(songId) {
-      const song = songData[songId];
-      if (!song) return;
+    function saveAnalysis(url, data) {
+      const analyses = getSavedAnalyses();
+      const existing = analyses.findIndex(a => a.url === url);
+      const entry = { url, data, timestamp: Date.now() };
+      if (existing >= 0) analyses[existing] = entry;
+      else analyses.unshift(entry);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(analyses));
+    }
 
+    // --- Render helpers ---
+    function renderRecentList() {
+      const container = document.querySelector('.recent-section');
+      const analyses = getSavedAnalyses();
+
+      if (analyses.length === 0) {
+        container.innerHTML = `
+          <div class="section-title">Recent Analyses</div>
+          <p style="color: var(--on-surface-muted); font-size: 14px; text-align: center; padding: 24px 0;">
+            No songs analyzed yet. Paste a YouTube link above to get started.
+          </p>`;
+        return;
+      }
+
+      container.innerHTML = '<div class="section-title">Recent Analyses</div>' +
+        analyses.slice(0, 10).map((a, i) => `
+          <div class="song-card" onclick="showResultsFromStorage(${i})">
+            <div class="song-card-thumb">
+              <span class="material-symbols-outlined">music_note</span>
+            </div>
+            <div class="song-card-info">
+              <h4>${escapeHtml(a.data.title)}</h4>
+              <p>${timeAgo(a.timestamp)}</p>
+              <div class="song-card-meta">
+                <span class="meta-chip">${escapeHtml(a.data.key)}</span>
+                <span class="meta-chip">${escapeHtml(a.data.tempo)}</span>
+              </div>
+            </div>
+          </div>
+        `).join('');
+    }
+
+    function renderLibrary() {
+      const container = document.querySelector('.library-content');
+      const analyses = getSavedAnalyses();
+
+      const songCount = analyses.length;
+      const tipCount = analyses.reduce((sum, a) => sum + (a.data.tips?.length || 0), 0);
+
+      container.innerHTML = `
+        <div class="section-title">Your Library</div>
+        <div class="library-stats">
+          <div class="stat-card">
+            <div class="stat-value">${songCount}</div>
+            <div class="stat-label">Songs Analyzed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">${tipCount}</div>
+            <div class="stat-label">Tips Generated</div>
+          </div>
+        </div>
+        ${songCount > 0 ? `
+        <div class="section-title" style="margin-top: 16px;">All Analyses</div>
+        ${analyses.map((a, i) => `
+          <div class="song-card" onclick="showResultsFromStorage(${i})">
+            <div class="song-card-thumb">
+              <span class="material-symbols-outlined">music_note</span>
+            </div>
+            <div class="song-card-info">
+              <h4>${escapeHtml(a.data.title)}</h4>
+              <p>${escapeHtml(a.data.key)} · ${escapeHtml(a.data.tempo)}</p>
+            </div>
+          </div>
+        `).join('')}` : ''}
+      `;
+    }
+
+    function showResultsFromStorage(index) {
+      const analyses = getSavedAnalyses();
+      if (!analyses[index]) return;
+      renderResults(analyses[index].data);
+    }
+
+    function renderResults(song) {
       document.getElementById('result-title').textContent = song.title;
-      document.getElementById('result-meta').textContent = song.meta;
+      document.getElementById('result-meta').textContent = song.artist || '';
       document.getElementById('result-key').textContent = song.key;
-      document.getElementById('result-key-detail').textContent = song.keyDetail;
+      document.getElementById('result-key-detail').textContent = song.key_detail;
       document.getElementById('result-tempo').textContent = song.tempo;
-      document.getElementById('result-tempo-detail').textContent = song.tempoDetail;
+      document.getElementById('result-tempo-detail').textContent = song.tempo_detail;
       document.getElementById('result-arrangement').textContent = song.arrangement;
 
       // Instruments
       const instContainer = document.getElementById('result-instruments');
-      instContainer.innerHTML = song.instruments.map(i => `<span class="instrument-chip">${i}</span>`).join('');
+      instContainer.innerHTML = song.instruments.map(i => `<span class="instrument-chip">${escapeHtml(i)}</span>`).join('');
 
       // Mood
       const moodDetail = document.querySelector('#screen-results .analysis-card:nth-child(5) .analysis-card-detail');
-      moodDetail.textContent = song.moodText;
+      moodDetail.textContent = song.mood_text;
       const moodTags = document.querySelector('#screen-results .mood-tags');
-      moodTags.innerHTML = song.moods.map(m => `<span class="mood-tag ${m.class}">${m.text}</span>`).join('');
+      moodTags.innerHTML = song.moods.map(m => `<span class="mood-tag ${m.class}">${escapeHtml(m.text)}</span>`).join('');
 
       // Tips
       const tipsContainer = document.querySelector('.tips-section');
       tipsContainer.innerHTML = '<div class="section-title">Songwriting Tips</div>' +
         song.tips.map(t => `
           <div class="tip-card ${t.class}">
-            <div class="tip-card-label">${t.label}</div>
-            <p>${t.text}</p>
+            <div class="tip-card-label">${escapeHtml(t.label)}</div>
+            <p>${escapeHtml(t.text)}</p>
           </div>
         `).join('');
 
       showScreen('results');
     }
 
-    function startAnalysis() {
+    // --- Navigation ---
+    function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('screen-' + name).classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (name === 'home') document.getElementById('nav-home').classList.add('active');
+      if (name === 'library') {
+        document.getElementById('nav-library').classList.add('active');
+        renderLibrary();
+      }
+    }
+
+    // --- Analysis (real API call) ---
+    async function startAnalysis() {
       const url = document.getElementById('youtube-url').value.trim();
       if (!url) {
         document.getElementById('youtube-url').focus();
         return;
       }
 
-      showScreen('loading');
+      // Basic URL validation
+      if (!/^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)/.test(url)) {
+        showError('Please enter a valid YouTube URL');
+        return;
+      }
 
+      showScreen('loading');
+      animateLoadingSteps();
+
+      try {
+        const response = await fetch(`${API_BASE}/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ youtube_url: url }),
+        });
+
+        if (!response.ok) {
+          const err = await response.json().catch(() => ({ detail: 'Analysis failed' }));
+          throw new Error(err.detail || `Server error (${response.status})`);
+        }
+
+        const data = await response.json();
+
+        // Save to localStorage
+        saveAnalysis(url, data);
+
+        // Show results
+        resetLoadingSteps();
+        renderResults(data);
+        renderRecentList();
+
+        // Clear input
+        document.getElementById('youtube-url').value = '';
+
+      } catch (error) {
+        resetLoadingSteps();
+        showScreen('home');
+        showError(error.message);
+      }
+    }
+
+    // --- Loading animation ---
+    let loadingInterval = null;
+
+    function animateLoadingSteps() {
       const steps = ['step-extract', 'step-key', 'step-structure', 'step-instruments', 'step-tips'];
       let current = 0;
 
-      const interval = setInterval(() => {
-        if (current > 0) {
+      // Start first step immediately
+      document.getElementById(steps[0]).classList.add('active');
+      current = 1;
+
+      loadingInterval = setInterval(() => {
+        if (current > 0 && current <= steps.length) {
           document.getElementById(steps[current - 1]).classList.remove('active');
           document.getElementById(steps[current - 1]).classList.add('done');
           document.getElementById(steps[current - 1]).querySelector('.material-symbols-outlined').textContent = 'check_circle';
@@ -1072,24 +1062,62 @@
           document.getElementById(steps[current]).classList.add('active');
           current++;
         } else {
-          clearInterval(interval);
-          setTimeout(() => {
-            // Reset loading state
-            steps.forEach(s => {
-              const el = document.getElementById(s);
-              el.classList.remove('active', 'done');
-              el.querySelector('.material-symbols-outlined').textContent =
-                s === 'step-extract' ? 'download' :
-                s === 'step-key' ? 'piano' :
-                s === 'step-structure' ? 'view_timeline' :
-                s === 'step-instruments' ? 'queue_music' : 'auto_awesome';
-            });
-            // Show dreams as demo result
-            showResults('dreams');
-          }, 600);
+          clearInterval(loadingInterval);
+          loadingInterval = null;
         }
-      }, 800);
+      }, 4000);
     }
+
+    function resetLoadingSteps() {
+      if (loadingInterval) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+      }
+      const icons = { 'step-extract': 'download', 'step-key': 'piano', 'step-structure': 'view_timeline', 'step-instruments': 'queue_music', 'step-tips': 'auto_awesome' };
+      Object.entries(icons).forEach(([id, icon]) => {
+        const el = document.getElementById(id);
+        el.classList.remove('active', 'done');
+        el.querySelector('.material-symbols-outlined').textContent = icon;
+      });
+    }
+
+    // --- Error display ---
+    function showError(message) {
+      // Create toast
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed; top: 60px; left: 50%; transform: translateX(-50%);
+        background: var(--accent-warm); color: #fff; padding: 12px 20px;
+        border-radius: 10px; font-size: 14px; font-weight: 500; z-index: 1000;
+        max-width: 350px; text-align: center; animation: fadeIn 0.2s;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // --- Utilities ---
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function timeAgo(timestamp) {
+      const seconds = Math.floor((Date.now() - timestamp) / 1000);
+      if (seconds < 60) return 'Just now';
+      if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+      if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+      const days = Math.floor(seconds / 86400);
+      if (days === 1) return 'Yesterday';
+      if (days < 7) return `${days} days ago`;
+      return `${Math.floor(days / 7)} week${Math.floor(days / 7) > 1 ? 's' : ''} ago`;
+    }
+
+    // --- Init ---
+    document.addEventListener('DOMContentLoaded', () => {
+      renderRecentList();
+    });
   </script>
 </body>
 </html>
