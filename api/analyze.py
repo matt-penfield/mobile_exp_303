@@ -149,7 +149,7 @@ def analyze_song(request: AnalyzeRequest):
     try:
         metadata = extract_metadata(url)
     except Exception as e:
-        raise HTTPException(status_code=422, detail=f"Failed to extract metadata: {str(e)}")
+        raise HTTPException(status_code=422, detail=f"YouTube extraction failed: {type(e).__name__}: {str(e)}")
 
     # Step 2: Generate full analysis via LLM
     try:
@@ -157,8 +157,10 @@ def analyze_song(request: AnalyzeRequest):
             title=metadata["title"],
             artist=metadata["artist"],
         )
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Analysis generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"LLM analysis failed: {type(e).__name__}: {str(e)}")
 
     return AnalysisResponse(
         title=f"{metadata['title']} — {metadata['artist']}",

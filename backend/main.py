@@ -55,7 +55,7 @@ class AnalysisResponse(BaseModel):
     tips: list[dict]
 
 
-@app.post("/analyze", response_model=AnalysisResponse)
+@app.post("/api/analyze", response_model=AnalysisResponse)
 def analyze_song(request: AnalyzeRequest):
     url = request.youtube_url.strip()
     print(f"[ANALYZE] Received request for: {url}")
