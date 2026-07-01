@@ -15,7 +15,7 @@ You must respond with valid JSON matching this exact structure:
   "tempo": "BPM as a string with unit, e.g. '120 BPM'",
   "tempo_detail": "1-2 sentences about the feel, groove, whether it's straight or swing, energy level",
   "arrangement": "Song structure described as sections with arrows, e.g. 'Intro → Verse 1 → Chorus → ...'",
-  "instruments": ["Array of instruments with emoji prefix, e.g. '🎸 Electric Guitar', '🥁 Drums'"],
+  "instruments": ["Array of instruments with emoji prefix. Use ONLY these emoji mappings: 🎸 for guitar (acoustic or electric), 🥁 for drums/percussion, 🎹 for piano/keyboards/synth, 🎤 for vocals, 🎵 for bass, 🎶 for backing vocals/harmonies, 🎻 for strings/violin/cello, 🎷 for saxophone/brass/woodwinds, 🎺 for trumpet/horn"],
   "mood_text": "2-3 sentences describing the overall emotional character and energy",
   "moods": [
     {"text": "Mood tag word", "class": "one of: warm, teal, gold, purple"}

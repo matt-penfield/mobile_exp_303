@@ -4,29 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Song Writing Assistant</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --primary: #7C4DFF;
-      --primary-light: #B388FF;
-      --primary-dark: #5C35CC;
-      --surface: #1A1A2E;
-      --surface-card: #242442;
-      --surface-elevated: #2D2D4F;
-      --on-surface: #EAEAFF;
-      --on-surface-muted: #9E9EBF;
-      --accent-warm: #FF6B6B;
-      --accent-teal: #4ECDC4;
-      --accent-gold: #FFD93D;
-      --radius: 16px;
-      --radius-sm: 10px;
+      --primary: #111111;
+      --primary-light: #555555;
+      --primary-dark: #333333;
+      --surface: #FFFFFF;
+      --surface-card: #F6F6F6;
+      --surface-elevated: #EEEEEE;
+      --on-surface: #111111;
+      --on-surface-muted: #999999;
+      --accent-warm: #E53935;
+      --accent-teal: #00897B;
+      --accent-gold: #F9A825;
+      --radius: 0px;
+      --radius-sm: 0px;
     }
 
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
       background: var(--surface);
       color: var(--on-surface);
       min-height: 100dvh;
@@ -52,16 +52,19 @@
     }
 
     .header h1 {
-      font-size: 20px;
+      font-family: 'Space Mono', monospace;
+      font-size: 18px;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
 
     .header-icon {
       width: 40px;
       height: 40px;
-      border-radius: 50%;
-      background: var(--surface-card);
+      border-radius: 0;
+      border: none;
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -106,17 +109,17 @@
 
     .url-input-wrapper {
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
       padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      border: 2px solid transparent;
-      transition: border-color 0.2s;
+      border: none;
+      transition: box-shadow 0.2s;
     }
 
     .url-input-wrapper:focus-within {
-      border-color: var(--primary);
+      box-shadow: 0 0 0 1px var(--on-surface);
     }
 
     .url-input-wrapper label {
@@ -130,11 +133,11 @@
     .url-input-wrapper input {
       background: var(--surface-elevated);
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: 0;
       padding: 14px 16px;
-      font-size: 15px;
+      font-size: 14px;
       color: var(--on-surface);
-      font-family: 'Inter', sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
       outline: none;
     }
 
@@ -143,25 +146,26 @@
     }
 
     .analyze-btn {
-      background: var(--primary);
-      color: #fff;
+      background: var(--on-surface);
+      color: var(--surface);
       border: none;
-      border-radius: var(--radius-sm);
+      border-radius: 0;
       padding: 16px;
-      font-size: 16px;
-      font-weight: 600;
-      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.2s, transform 0.1s;
+      transition: opacity 0.1s;
     }
 
     .analyze-btn:active {
-      transform: scale(0.97);
-      background: var(--primary-dark);
+      opacity: 0.7;
     }
 
     /* Recent analyses */
@@ -170,19 +174,21 @@
     }
 
     .section-title {
-      font-size: 14px;
-      font-weight: 600;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 3px;
       color: var(--on-surface-muted);
       margin-bottom: 12px;
     }
 
     .song-card {
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
+      border: none;
       padding: 16px;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
       gap: 14px;
@@ -197,7 +203,8 @@
     .song-card-thumb {
       width: 52px;
       height: 52px;
-      border-radius: var(--radius-sm);
+      border-radius: 0;
+      border: none;
       background: var(--surface-elevated);
       display: flex;
       align-items: center;
@@ -207,7 +214,7 @@
 
     .song-card-thumb .material-symbols-outlined {
       font-size: 24px;
-      color: var(--primary-light);
+      color: var(--on-surface-muted);
     }
 
     .song-card-info {
@@ -236,12 +243,14 @@
     }
 
     .meta-chip {
-      font-size: 11px;
+      font-size: 10px;
       padding: 3px 8px;
-      border-radius: 6px;
+      border-radius: 0;
+      border: none;
       background: var(--surface-elevated);
       color: var(--on-surface-muted);
-      font-weight: 500;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 400;
     }
 
     /* LOADING SCREEN */
@@ -264,9 +273,9 @@
     .loading-ring {
       width: 100%;
       height: 100%;
-      border: 4px solid var(--surface-card);
-      border-top-color: var(--primary);
-      border-radius: 50%;
+      border: 2px solid var(--surface-elevated);
+      border-top-color: var(--on-surface);
+      border-radius: 0;
       animation: spin 1s linear infinite;
     }
 
@@ -280,7 +289,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 36px;
-      color: var(--primary-light);
+      color: var(--on-surface);
     }
 
     .loading-text {
@@ -337,15 +346,17 @@
       align-items: center;
       gap: 14px;
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
+      border: none;
       padding: 16px;
     }
 
     .results-song-info .thumb {
       width: 56px;
       height: 56px;
-      border-radius: var(--radius-sm);
-      background: linear-gradient(135deg, var(--primary), var(--accent-warm));
+      border-radius: 0;
+      border: none;
+      background: var(--surface-elevated);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -353,17 +364,18 @@
 
     .results-song-info .thumb .material-symbols-outlined {
       font-size: 28px;
-      color: #fff;
+      color: var(--on-surface);
     }
 
     .results-song-info .info h3 {
-      font-size: 16px;
-      font-weight: 600;
+      font-size: 15px;
+      font-weight: 700;
     }
 
     .results-song-info .info p {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--on-surface-muted);
+      font-family: Helvetica, Arial, sans-serif;
       margin-top: 2px;
     }
 
@@ -378,7 +390,8 @@
 
     .analysis-card {
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
+      border: none;
       padding: 18px;
     }
 
@@ -391,18 +404,20 @@
 
     .analysis-card-header .material-symbols-outlined {
       font-size: 22px;
-      color: var(--primary-light);
+      color: var(--on-surface-muted);
     }
 
     .analysis-card-header h4 {
-      font-size: 14px;
-      font-weight: 600;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 2px;
     }
 
     .analysis-card-value {
-      font-size: 22px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 24px;
       font-weight: 700;
       margin-bottom: 4px;
     }
@@ -424,7 +439,7 @@
 
     .arrangement-bar {
       flex: 1;
-      border-radius: 4px 4px 0 0;
+      border-radius: 0;
       position: relative;
     }
 
@@ -438,6 +453,25 @@
       white-space: nowrap;
     }
 
+    .arrangement-legend {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      font-size: 9px;
+      color: var(--on-surface-muted);
+    }
+
+    .arrangement-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .arrangement-legend-item .swatch {
+      width: 10px;
+      height: 10px;
+    }
+
     /* Instrumentation chips */
     .instrument-list {
       display: flex;
@@ -447,12 +481,14 @@
     }
 
     .instrument-chip {
-      font-size: 12px;
+      font-size: 11px;
       padding: 6px 12px;
-      border-radius: 20px;
+      border-radius: 0;
+      border: none;
       background: var(--surface-elevated);
       color: var(--on-surface);
-      font-weight: 500;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 400;
     }
 
     /* Mood visual */
@@ -464,16 +500,17 @@
     }
 
     .mood-tag {
-      font-size: 12px;
+      font-size: 11px;
       padding: 6px 12px;
-      border-radius: 20px;
-      font-weight: 500;
+      border-radius: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      font-weight: 400;
     }
 
-    .mood-tag.warm { background: rgba(255, 107, 107, 0.15); color: var(--accent-warm); }
-    .mood-tag.teal { background: rgba(78, 205, 196, 0.15); color: var(--accent-teal); }
-    .mood-tag.gold { background: rgba(255, 217, 61, 0.15); color: var(--accent-gold); }
-    .mood-tag.purple { background: rgba(179, 136, 255, 0.15); color: var(--primary-light); }
+    .mood-tag.warm { background: rgba(229, 57, 53, 0.1); border: none; color: var(--accent-warm); }
+    .mood-tag.teal { background: rgba(0, 137, 123, 0.1); border: none; color: var(--accent-teal); }
+    .mood-tag.gold { background: rgba(249, 168, 37, 0.1); border: none; color: var(--accent-gold); }
+    .mood-tag.purple { background: rgba(85, 85, 85, 0.1); border: none; color: var(--primary-light); }
 
     /* Tips section */
     .tips-section {
@@ -486,10 +523,11 @@
 
     .tip-card {
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
       padding: 18px;
-      margin-bottom: 12px;
-      border-left: 4px solid var(--primary);
+      margin-bottom: 8px;
+      border: none;
+      border-left: 3px solid var(--on-surface);
     }
 
     .tip-card.warm { border-left-color: var(--accent-warm); }
@@ -497,11 +535,12 @@
     .tip-card.gold { border-left-color: var(--accent-gold); }
 
     .tip-card-label {
-      font-size: 11px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--primary-light);
+      letter-spacing: 2px;
+      color: var(--on-surface-muted);
       margin-bottom: 8px;
     }
 
@@ -523,7 +562,7 @@
       transform: translateX(-50%);
       width: 100%;
       max-width: 430px;
-      background: var(--surface-card);
+      background: var(--surface);
       border-top: 1px solid var(--surface-elevated);
       display: flex;
       padding: 10px 0 28px;
@@ -542,7 +581,7 @@
     }
 
     .nav-item.active {
-      color: var(--primary-light);
+      color: var(--on-surface);
     }
 
     .nav-item .material-symbols-outlined {
@@ -550,8 +589,11 @@
     }
 
     .nav-item span:last-child {
-      font-size: 11px;
-      font-weight: 500;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     /* LIBRARY SCREEN */
@@ -568,23 +610,26 @@
     .stat-card {
       flex: 1;
       background: var(--surface-card);
-      border-radius: var(--radius);
+      border-radius: 0;
+      border: none;
       padding: 16px;
       text-align: center;
     }
 
     .stat-card .stat-value {
-      font-size: 24px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 28px;
       font-weight: 700;
-      color: var(--primary-light);
+      color: var(--on-surface);
     }
 
     .stat-card .stat-label {
-      font-size: 11px;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 9px;
       color: var(--on-surface-muted);
       margin-top: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.3px;
+      letter-spacing: 1px;
     }
 
     /* Scroll */
@@ -598,12 +643,14 @@
     .back-btn {
       background: none;
       border: none;
-      color: var(--on-surface);
+      color: var(--on-surface-muted);
       display: flex;
       align-items: center;
       gap: 4px;
-      font-size: 14px;
-      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-family: Helvetica, Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       cursor: pointer;
       padding: 8px 0;
       margin-bottom: 12px;
@@ -616,9 +663,6 @@
     <div class="header">
       <h1>SongCraft</h1>
       <div style="display: flex; gap: 8px;">
-        <div class="header-icon" onclick="clearHistory()" title="Clear history">
-          <span class="material-symbols-outlined">delete</span>
-        </div>
         <div class="header-icon" onclick="showScreen('library')">
           <span class="material-symbols-outlined">library_music</span>
         </div>
@@ -764,6 +808,13 @@
                 <span class="bar-label">Out</span>
               </div>
             </div>
+            <div class="arrangement-legend">
+              <div class="arrangement-legend-item"><div class="swatch" style="background: var(--accent-teal);"></div>Verse</div>
+              <div class="arrangement-legend-item"><div class="swatch" style="background: var(--accent-warm);"></div>Chorus</div>
+              <div class="arrangement-legend-item"><div class="swatch" style="background: var(--accent-gold);"></div>Bridge/Break</div>
+              <div class="arrangement-legend-item"><div class="swatch" style="background: var(--on-surface-muted);"></div>Intro/Outro</div>
+            </div>
+            <div class="analysis-card-detail" style="margin-top: 12px; font-size: 11px;">Bar height = relative energy/intensity</div>
           </div>
 
           <!-- Instrumentation -->
@@ -851,10 +902,6 @@
       <div class="nav-item" id="nav-library" onclick="showScreen('library')">
         <span class="material-symbols-outlined">library_music</span>
         <span>Library</span>
-      </div>
-      <div class="nav-item" id="nav-profile" onclick="showScreen('library')">
-        <span class="material-symbols-outlined">person</span>
-        <span>Profile</span>
       </div>
     </div>
   </div>
