@@ -21,11 +21,16 @@ def extract_audio_and_metadata(youtube_url: str) -> tuple[str, dict]:
                 "preferredquality": "192",
             }
         ],
-        "quiet": True,
+        "quiet": False,
         "no_warnings": True,
+        "noplaylist": True,
         # Limit download to 10 minutes max to avoid huge files
         "match_filter": yt_dlp.utils.match_filter_func("duration < 600"),
     }
+
+    # Strip playlist parameters from URL
+    import re as _re
+    youtube_url = _re.split(r"[&?]list=", youtube_url)[0]
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(youtube_url, download=True)
