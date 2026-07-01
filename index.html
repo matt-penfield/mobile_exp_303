@@ -62,15 +62,23 @@
     }
 
     .header-icon {
-      width: 40px;
-      height: 40px;
       border-radius: 0;
       border: none;
       background: transparent;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      gap: 2px;
+    }
+
+    .header-icon-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--on-surface-muted);
     }
 
     /* Screen management */
@@ -83,10 +91,37 @@
       text-align: center;
     }
 
-    .home-hero .icon-large {
-      font-size: 64px;
-      color: var(--accent-warm);
+    .icon-triptych {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100px;
+      height: 80px;
       margin-bottom: 16px;
+    }
+
+    .icon-triptych .note {
+      position: absolute;
+      font-size: 56px;
+    }
+
+    .icon-triptych .note-left {
+      color: var(--on-surface-muted);
+      opacity: 0.25;
+      transform: translateX(-20px) scale(0.85);
+    }
+
+    .icon-triptych .note-right {
+      color: var(--on-surface-muted);
+      opacity: 0.25;
+      transform: translateX(20px) scale(0.85);
+    }
+
+    .icon-triptych .note-center {
+      color: var(--accent-warm);
+      font-size: 64px;
+      z-index: 1;
     }
 
     .home-hero h2 {
@@ -102,6 +137,80 @@
       line-height: 1.5;
       max-width: 300px;
       margin: 0 auto;
+    }
+
+    /* Onboarding card */
+    .onboarding-card {
+      margin: 0 24px 24px;
+      background: var(--surface-card);
+      overflow: hidden;
+    }
+
+    .onboarding-toggle {
+      width: 100%;
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--on-surface);
+    }
+
+    .onboarding-toggle .material-symbols-outlined {
+      font-size: 20px;
+      color: var(--on-surface-muted);
+      transition: transform 0.2s;
+    }
+
+    .onboarding-card.open .onboarding-toggle .material-symbols-outlined {
+      transform: rotate(180deg);
+    }
+
+    .onboarding-body {
+      display: none;
+      padding: 0 20px 20px;
+    }
+
+    .onboarding-card.open .onboarding-body {
+      display: block;
+    }
+
+    .onboarding-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .onboarding-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .step-number {
+      width: 24px;
+      height: 24px;
+      background: var(--on-surface);
+      color: var(--surface);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 14px;
+      color: var(--on-surface);
+      line-height: 1.4;
     }
 
     /* Input area */
@@ -163,7 +272,29 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
+      position: relative;
+      overflow: hidden;
       transition: opacity 0.1s;
+    }
+
+    .analyze-btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: none;
+    }
+
+    .analyze-btn.sweep::after {
+      animation: btn-sweep 0.5s ease forwards;
+    }
+
+    @keyframes btn-sweep {
+      from { left: -100%; }
+      to { left: 100%; }
     }
 
     .analyze-btn:active {
@@ -268,30 +399,38 @@
 
     .loading-animation {
       width: 120px;
-      height: 120px;
-      position: relative;
+      height: 80px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      opacity: 0;
+      animation: fade-in 0.4s ease 0.1s forwards;
     }
 
-    .loading-ring {
-      width: 100%;
-      height: 100%;
-      border: 2px solid var(--surface-elevated);
-      border-top-color: var(--on-surface);
-      border-radius: 0;
-      animation: spin 1s linear infinite;
+    @keyframes fade-in {
+      to { opacity: 1; }
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .eq-bar {
+      width: 6px;
+      background: var(--on-surface);
+      border-radius: 2px;
+      will-change: transform;
+      transform-origin: bottom;
+      transform: scaleY(0.3);
+      animation: eq-pulse var(--dur) cubic-bezier(0.42, 0, 0.58, 1) infinite both;
     }
 
-    .loading-icon {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 36px;
-      color: var(--on-surface);
+    .eq-bar:nth-child(1) { height: 48px; --dur: 1.1s; animation-delay: -0.55s; }
+    .eq-bar:nth-child(2) { height: 48px; --dur: 1.4s; animation-delay: -0.7s; }
+    .eq-bar:nth-child(3) { height: 48px; --dur: 1.0s; animation-delay: -0.25s; }
+    .eq-bar:nth-child(4) { height: 48px; --dur: 1.5s; animation-delay: -1.1s; }
+    .eq-bar:nth-child(5) { height: 48px; --dur: 1.2s; animation-delay: -0.9s; }
+
+    @keyframes eq-pulse {
+      0%, 100% { transform: scaleY(0.3); }
+      50% { transform: scaleY(1); }
     }
 
     .loading-text {
@@ -667,6 +806,7 @@
       <div style="display: flex; gap: 8px;">
         <div class="header-icon" onclick="showScreen('library')">
           <span class="material-symbols-outlined">library_music</span>
+          <span class="header-icon-label">Library</span>
         </div>
       </div>
     </div>
@@ -674,9 +814,35 @@
     <!-- HOME SCREEN -->
     <div class="screen active" id="screen-home">
       <div class="home-hero">
-        <span class="material-symbols-outlined icon-large">music_note</span>
+        <div class="icon-triptych">
+          <span class="material-symbols-outlined note note-left">music_note</span>
+          <span class="material-symbols-outlined note note-center">music_note</span>
+          <span class="material-symbols-outlined note note-right">music_note</span>
+        </div>
         <h2>Learn from the music you love</h2>
-        <p>Paste a YouTube link and get songwriting tips based on the song's key, tempo, arrangement, and more.</p>
+      </div>
+
+      <div class="onboarding-card open" id="onboarding-card">
+        <button class="onboarding-toggle" onclick="toggleOnboarding()">
+          How it works
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <div class="onboarding-body">
+          <div class="onboarding-steps">
+            <div class="onboarding-step">
+              <span class="step-number">1</span>
+              <span class="step-text">Paste a YouTube link to any song</span>
+            </div>
+            <div class="onboarding-step">
+              <span class="step-number">2</span>
+              <span class="step-text">We analyze key, tempo, and arrangement</span>
+            </div>
+            <div class="onboarding-step">
+              <span class="step-number">3</span>
+              <span class="step-text">Get tailored songwriting tips</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="input-section">
@@ -702,8 +868,11 @@
     <div class="screen" id="screen-loading">
       <div class="loading-content">
         <div class="loading-animation">
-          <div class="loading-ring"></div>
-          <span class="material-symbols-outlined loading-icon">graphic_eq</span>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
+          <div class="eq-bar"></div>
         </div>
         <div class="loading-text">
           <h3>Analyzing your song...</h3>
@@ -1037,6 +1206,11 @@
       showScreen('results');
     }
 
+    // --- Onboarding ---
+    function toggleOnboarding() {
+      document.getElementById('onboarding-card').classList.toggle('open');
+    }
+
     // --- Navigation ---
     function showScreen(name) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -1052,6 +1226,11 @@
 
     // --- Analysis (real API call) ---
     async function startAnalysis() {
+      const btn = document.querySelector('.analyze-btn');
+      btn.classList.remove('sweep');
+      void btn.offsetWidth;
+      btn.classList.add('sweep');
+
       const url = document.getElementById('youtube-url').value.trim();
       if (!url) {
         document.getElementById('youtube-url').focus();
