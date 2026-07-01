@@ -1,9 +1,10 @@
 import json
 import os
-from openai import OpenAI
+from groq import Groq
 
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+def _get_client():
+    return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 SYSTEM_PROMPT = """You are a professional music analyst and songwriting coach. Given a song's title, artist, detected musical key, and tempo (BPM), provide a detailed analysis and actionable songwriting tips.
 
@@ -50,8 +51,9 @@ Detected Tempo: {bpm} BPM
 
 Provide a complete analysis covering arrangement, instrumentation, mood, and 4 actionable songwriting tips."""
 
+    client = _get_client()
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="llama-3.3-70b-versatile",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt},
