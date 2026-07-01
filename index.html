@@ -1075,8 +1075,10 @@
         });
 
         if (!response.ok) {
-          const err = await response.json().catch(() => ({ detail: 'Analysis failed' }));
-          throw new Error(err.detail || `Server error (${response.status})`);
+          const text = await response.text();
+          let detail;
+          try { detail = JSON.parse(text).detail; } catch { detail = text || `Server error ${response.status}`; }
+          throw new Error(detail);
         }
 
         const data = await response.json();

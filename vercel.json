@@ -1,6 +1,9 @@
 {
-  "buildCommand": "",
-  "outputDirectory": "",
+  "functions": {
+    "api/analyze.py": {
+      "maxDuration": 30
+    }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/analyze" }
   ]
