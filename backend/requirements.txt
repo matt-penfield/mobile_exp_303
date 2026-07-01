@@ -1,6 +1,3 @@
-yt-dlp
-librosa
-numpy
 fastapi
 uvicorn[standard]
 groq

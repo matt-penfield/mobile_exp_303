@@ -1,7 +1,8 @@
 import os
-import tempfile
 import re
-from contextlib import asynccontextmanager
+import json
+from urllib.request import urlopen, Request
+from urllib.parse import quote
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,21 +10,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-from services.youtube import extract_audio_and_metadata
-from services.audio_analysis import analyze_audio
 from services.llm import generate_song_analysis
 
 load_dotenv()
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup: ensure temp directory exists
-    os.makedirs(tempfile.gettempdir(), exist_ok=True)
-    yield
-
-
-app = FastAPI(title="SongCraft API", lifespan=lifespan)
+app = FastAPI(title="SongCraft API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -55,6 +47,30 @@ class AnalysisResponse(BaseModel):
     tips: list[dict]
 
 
+def extract_metadata(youtube_url: str) -> dict:
+    """Extract title and artist from YouTube using the oEmbed API."""
+    youtube_url = re.split(r"[&?]list=", youtube_url)[0]
+
+    oembed_url = f"https://www.youtube.com/oembed?url={quote(youtube_url, safe='')}&format=json"
+    req = Request(oembed_url, headers={"User-Agent": "Mozilla/5.0"})
+    resp = urlopen(req, timeout=10)
+    data = json.loads(resp.read().decode())
+
+    full_title = data.get("title", "Unknown Title")
+    author = data.get("author_name", "Unknown Artist")
+
+    if " - " in full_title:
+        artist, title = full_title.split(" - ", 1)
+    else:
+        title = full_title
+        artist = author
+
+    if artist.endswith(" - Topic"):
+        artist = artist[: -len(" - Topic")]
+
+    return {"title": title.strip(), "artist": artist.strip()}
+
+
 @app.post("/api/analyze", response_model=AnalysisResponse)
 def analyze_song(request: AnalyzeRequest):
     url = request.youtube_url.strip()
@@ -63,39 +79,26 @@ def analyze_song(request: AnalyzeRequest):
     if not YOUTUBE_URL_PATTERN.match(url):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
 
-    # Step 1: Extract audio and metadata from YouTube
-    print("[ANALYZE] Step 1: Extracting audio...")
+    # Step 1: Extract metadata from YouTube
+    print("[ANALYZE] Step 1: Extracting metadata...")
     try:
-        audio_path, metadata = extract_audio_and_metadata(url)
+        metadata = extract_metadata(url)
     except Exception as e:
         print(f"[ANALYZE] Step 1 FAILED: {e}")
-        raise HTTPException(status_code=422, detail=f"Failed to extract audio: {str(e)}")
+        raise HTTPException(status_code=422, detail=f"YouTube extraction failed: {str(e)}")
     print(f"[ANALYZE] Step 1 done: {metadata['title']} by {metadata['artist']}")
 
-    # Step 2: Analyze key and tempo with librosa
-    print("[ANALYZE] Step 2: Analyzing audio...")
-    try:
-        audio_features = analyze_audio(audio_path)
-    except Exception as e:
-        print(f"[ANALYZE] Step 2 FAILED: {e}")
-        raise HTTPException(status_code=500, detail=f"Audio analysis failed: {str(e)}")
-    finally:
-        # Clean up temp audio file
-        if os.path.exists(audio_path):
-            os.remove(audio_path)
-    print(f"[ANALYZE] Step 2 done: {audio_features}")
-
-    # Step 3: Generate full analysis and tips via LLM
+    # Step 2: Generate full analysis and tips via LLM
+    print("[ANALYZE] Step 2: Generating analysis...")
     try:
         result = generate_song_analysis(
             title=metadata["title"],
             artist=metadata["artist"],
-            key=audio_features["key"],
-            mode=audio_features["mode"],
-            bpm=audio_features["bpm"],
         )
     except Exception as e:
+        print(f"[ANALYZE] Step 2 FAILED: {e}")
         raise HTTPException(status_code=500, detail=f"Analysis generation failed: {str(e)}")
+    print("[ANALYZE] Step 2 done")
 
     return AnalysisResponse(
         title=f"{metadata['title']} — {metadata['artist']}",

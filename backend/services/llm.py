@@ -6,7 +6,7 @@ from groq import Groq
 def _get_client():
     return Groq(api_key=os.getenv("GROQ_API_KEY"))
 
-SYSTEM_PROMPT = """You are a professional music analyst and songwriting coach. Given a song's title, artist, detected musical key, and tempo (BPM), provide a detailed analysis and actionable songwriting tips.
+SYSTEM_PROMPT = """You are a professional music analyst and songwriting coach. Given a song's title and artist, provide a detailed musical analysis including key, tempo, arrangement, instrumentation, mood, and actionable songwriting tips.
 
 You must respond with valid JSON matching this exact structure:
 {
@@ -35,21 +35,20 @@ Guidelines:
 - Tips must be SPECIFIC to this song — reference the actual key, tempo, and known characteristics
 - Instruments should reflect what's actually in the song (typically 5-7 instruments/layers)
 - Be musically accurate — if the song is well-known, use your knowledge of it
-- Keep all text concise and scannable"""
+- Keep all text concise and scannable
+- For key and tempo, use your musical knowledge of the song to provide accurate values"""
 
 
-def generate_song_analysis(title: str, artist: str, key: str, mode: str, bpm: int) -> dict:
+def generate_song_analysis(title: str, artist: str) -> dict:
     """
-    Generate full song analysis and songwriting tips using OpenAI.
+    Generate full song analysis and songwriting tips using Groq LLM.
     """
     user_prompt = f"""Analyze this song and generate songwriting tips:
 
 Title: {title}
 Artist: {artist}
-Detected Key: {key} {mode}
-Detected Tempo: {bpm} BPM
 
-Provide a complete analysis covering arrangement, instrumentation, mood, and 4 actionable songwriting tips."""
+Provide a complete analysis covering key, tempo, arrangement, instrumentation, mood, and 4 actionable songwriting tips."""
 
     client = _get_client()
     response = client.chat.completions.create(
