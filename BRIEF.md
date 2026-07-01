@@ -38,9 +38,6 @@ Analysis feeds into an LLM-powered tips engine that produces actionable, persona
 
 > **Mood tip:** The melancholic tone comes from minor key + slow tempo + reverb-heavy vocals. To capture a similar vibe, keep your vocal production wet and your chord voicings open.
 
-### Multi-Song Style Profile
-
-When users submit multiple songs, the app synthesizes patterns across them into a "Style Profile" — identifying common keys, tempo ranges, arrangement tendencies, and instrumentation preferences. Tips then draw from the aggregate style.
 
 ---
 
@@ -75,7 +72,7 @@ When users submit multiple songs, the app synthesizes patterns across them into 
 - Save analyses to a personal library
 - Mobile-first (iOS + Android)
 
-### Future
+### Future Roadmap
 - Multi-song style profiles
 - Side-by-side song comparison
 - Export tips as a "writing brief" (PDF/share)
